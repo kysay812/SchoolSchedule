@@ -6,105 +6,35 @@ const classes = [
   '10а (техн)', '10б (гум)', '11а (сэ)', '11б (гум)'
 ];
 
-const scheduleData = [
-  { 
-    lesson: 1, start: '08:00', end: '08:40', 
-    subjects: [
-      'Сон на парте', 'Битва за сменку', 'ОБЖ (сонный час)', 'Матика (плач)', 
-      'Русский (храп)', 'История мемов', 'ВД Биология', 'ВД Информ.', 
-      'Россия-мои гор.', 'Обществ. / Физика', 'Обществ. / Физика', 'Литра', 'Химия', 'Физра'
-    ] 
-  },
-  { 
-    lesson: 2, start: '08:50', end: '09:30', 
-    subjects: [
-      'Математика', 'География', 'Технология (печеньки)', 'Музыка', 
-      'ИЗО', 'Алгебра', 'Геометрия', 'Биология', 
-      'Англ. язык', 'Обществ. / Физика', 'Обществ. / Физика', 'Информатика', 'Физика', 'История'
-    ] 
-  },
-  { 
-    lesson: 3, start: '09:50', end: '10:30', 
-    subjects: [
-      'Битва в столовой', 'Поиск сосиски в тесте', 'Забег за чаем', 'Очередь за пиццей', 
-      'Английский', 'Химия', 'История', 'Химия', 
-      'Англ. язык', 'Физика / Обществ.', 'Физика / Обществ.', 'Литература', 'Геометрия', 'Биология'
-    ] 
-  },
-  { 
-    lesson: 4, start: '10:40', end: '11:20', 
-    subjects: [
-      'Литература', 'Русский язык', 'Математика', 'Биология', 
-      'География', 'Физика', 'Информатика', 'Геометрия', 
-      'Биология', 'Физика / Обществ.', 'Физика / Обществ.', 'Экономика', 'Право', 'Английский'
-    ] 
-  },
-  { 
-    lesson: 5, start: '11:35', end: '12:15', 
-    subjects: [
-      'Физра (забытая форма)', 'Музыка (хор)', 'История', 'Технология', 
-      'Информатика', 'Геометрия', 'Русский язык', 'Вер-ть и стат-ка', 
-      'Химия', 'Литература', 'История', 'Астрономия', 'Мат. анализ', 'Обществознание'
-    ] 
-  },
-  { 
-    lesson: 6, start: '12:20', end: '13:00', 
-    subjects: [
-      'Рисование на полях', 'Списывание ГДЗ', 'Попытка уйти домой', 'Биология', 
-      'Литература', 'Физ-ра', 'Биология', 'Англ. язык', 
-      'История', 'Геометрия', 'История', 'Родной язык', 'Проекты', 'Философия жизни'
-    ] 
-  },
-  { 
-    lesson: 7, start: '13:05', end: '13:45', 
-    subjects: [
-      'Доп. английский', 'Шахматы', 'Робототехника', 'Кружок мемов', 
-      'Тихий час', 'Экология', 'Физ. культура', 'Англ. язык', 
-      'История', 'Геометрия', 'Литература', 'МХК', 'Психология', 'Подготовка к ЕГЭ'
-    ] 
-  },
-  { 
-    lesson: 8, start: '14:00', end: '14:40', 
-    subjects: [
-      'Квиддич', 'ВД Физра', 'Киберспорт', 'ВД мат.повыш', 
-      'МХК', 'Россия - мои гор.', 'ЕГЭ выживание', 'Разговоры о важном (2.0)', 
-      'Сверхсложная матика', 'Высшая химия', 'Сон 2.0', '', '', ''
-    ] 
-  }
-];
+const daysOfWeek = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
+const dayShorts = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ'];
 
-type Period = {
-  id: string;
-  type: 'lesson' | 'break';
-  name: string;
+type Lesson = {
+  lesson: number;
   start: string;
   end: string;
-  data?: typeof scheduleData[0];
+  subjects: string[];
 };
 
-const periods: Period[] = [];
-for (let i = 0; i < scheduleData.length; i++) {
-  const lesson = scheduleData[i];
-  periods.push({
-    id: `l${lesson.lesson}`,
-    type: 'lesson',
-    name: `${lesson.lesson} урок`,
-    start: lesson.start,
-    end: lesson.end,
-    data: lesson
-  });
-  
-  if (i < scheduleData.length - 1) {
-    const nextLesson = scheduleData[i + 1];
-    periods.push({
-      id: `b${lesson.lesson}`,
-      type: 'break',
-      name: 'Перемена',
-      start: lesson.end,
-      end: nextLesson.start
-    });
-  }
-}
+const baseLessons: Lesson[] = [
+  { lesson: 1, start: '08:00', end: '08:40', subjects: ['Сон на парте', 'Битва за сменку', 'ОБЖ (сонный час)', 'Матика (плач)', 'Русский (храп)', 'История мемов', 'ВД Биология', 'ВД Информ.', 'Россия-мои гор.', 'Обществ. / Физика', 'Обществ. / Физика', 'Литра', 'Химия', 'Физра'] },
+  { lesson: 2, start: '08:50', end: '09:30', subjects: ['Математика', 'География', 'Технология (печеньки)', 'Музыка', 'ИЗО', 'Алгебра', 'Геометрия', 'Биология', 'Англ. язык', 'Обществ. / Физика', 'Обществ. / Физика', 'Информатика', 'Физика', 'История'] },
+  { lesson: 3, start: '09:50', end: '10:30', subjects: ['Битва в столовой', 'Поиск сосиски в тесте', 'Забег за чаем', 'Очередь за пиццей', 'Английский', 'Химия', 'История', 'Химия', 'Англ. язык', 'Физика / Обществ.', 'Физика / Обществ.', 'Литература', 'Геометрия', 'Биология'] },
+  { lesson: 4, start: '10:40', end: '11:20', subjects: ['Литература', 'Русский язык', 'Математика', 'Биология', 'География', 'Физика', 'Информатика', 'Геометрия', 'Биология', 'Физика / Обществ.', 'Физика / Обществ.', 'Экономика', 'Право', 'Английский'] },
+  { lesson: 5, start: '11:35', end: '12:15', subjects: ['Физра (забытая форма)', 'Музыка (хор)', 'История', 'Технология', 'Информатика', 'Геометрия', 'Русский язык', 'Вер-ть и стат-ка', 'Химия', 'Литература', 'История', 'Астрономия', 'Мат. анализ', 'Обществознание'] },
+  { lesson: 6, start: '12:20', end: '13:00', subjects: ['Рисование на полях', 'Списывание ГДЗ', 'Попытка уйти домой', 'Биология', 'Литература', 'Физ-ра', 'Биология', 'Англ. язык', 'История', 'Геометрия', 'История', 'Родной язык', 'Проекты', 'Философия жизни'] },
+  { lesson: 7, start: '13:05', end: '13:45', subjects: ['Доп. английский', 'Шахматы', 'Робототехника', 'Кружок мемов', 'Тихий час', 'Экология', 'Физ. культура', 'Англ. язык', 'История', 'Геометрия', 'Литература', 'МХК', 'Психология', 'Подготовка к ЕГЭ'] },
+  { lesson: 8, start: '14:00', end: '14:40', subjects: ['Квиддич', 'ВД Физра', 'Киберспорт', 'ВД мат.повыш', 'МХК', 'Россия - мои гор.', 'ЕГЭ выживание', 'Разговоры о важном (2.0)', 'Сверхсложная матика', 'Высшая химия', 'Сон 2.0', '', '', ''] }
+];
+
+// Расписание с небольшими вариациями по дням
+const weeklySchedule: Record<number, Lesson[]> = {
+  0: baseLessons, // Понедельник
+  1: baseLessons.map(l => ({ ...l, subjects: l.subjects.map((s, i) => i % 3 === 0 ? s + ' (вт)' : s) })), // Вторник
+  2: baseLessons.map(l => ({ ...l, subjects: l.subjects.map((s, i) => i % 2 === 0 ? s + ' (ср)' : s) })), // Среда
+  3: baseLessons, // Четверг
+  4: baseLessons.map(l => ({ ...l, subjects: l.subjects.map((s, i) => i % 3 === 1 ? s + ' (пт)' : s) })) // Пятница
+};
 
 function parseTime(timeStr: string, baseDate: Date): Date {
   const [hours, minutes] = timeStr.split(':').map(Number);
@@ -135,16 +65,20 @@ export default function App() {
 
   const now = new Date(realNow.getTime() + demoOffset * 60000);
 
-  const currentPeriodIndex = periods.findIndex(p => {
-    const start = parseTime(p.start, now);
-    const end = parseTime(p.end, now);
+  // Get current day (0-4 for Mon-Fri)
+  const dayOfWeek = now.getDay();
+  const currentDayIndex = dayOfWeek === 0 ? 4 : dayOfWeek - 1; // Convert to 0=Mon, 4=Fri
+  const currentLessons = weeklySchedule[currentDayIndex] || baseLessons;
+  
+  const currentLessonIndex = currentLessons.findIndex(l => {
+    const start = parseTime(l.start, now);
+    const end = parseTime(l.end, now);
     return now >= start && now < end;
   });
 
-  const currentPeriod = currentPeriodIndex !== -1 ? periods[currentPeriodIndex] : null;
-
-  const firstStart = parseTime(periods[0].start, now);
-  const lastEnd = parseTime(periods[periods.length - 1].end, now);
+  const currentLesson = currentLessonIndex !== -1 ? currentLessons[currentLessonIndex] : null;
+  const firstStart = parseTime(currentLessons[0].start, now);
+  const lastEnd = parseTime(currentLessons[currentLessons.length - 1].end, now);
 
   let statusText = '';
   let countdown = '';
@@ -158,130 +92,98 @@ export default function App() {
     countdown = `До начала 1 урока: ${m} мин ${s.toString().padStart(2, '0')} сек`;
   } else if (now >= lastEnd) {
     statusText = 'Уроки закончились';
-  } else if (currentPeriod) {
-    const end = parseTime(currentPeriod.end, now);
+  } else if (currentLesson) {
+    const end = parseTime(currentLesson.end, now);
     const diff = Math.floor((end.getTime() - now.getTime()) / 1000);
     const m = Math.floor(diff / 60);
     const s = diff % 60;
     
-    if (currentPeriod.type === 'lesson') {
-      statusText = `Идет ${currentPeriod.name}`;
-      statusColor = 'text-emerald-400';
-    } else {
-      statusText = 'Идет перемена';
-      statusColor = 'text-amber-400';
-    }
+    statusText = `Идет ${currentLesson.lesson} урок`;
+    statusColor = 'text-emerald-400';
     countdown = `До конца: ${m} мин ${s.toString().padStart(2, '0')} сек`;
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex flex-col">
+    <div className="h-screen bg-slate-950 text-slate-100 font-sans flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-800 p-6 shadow-lg flex justify-between items-center z-10">
+      <header className="bg-slate-900 border-b border-slate-800 px-4 py-3 shadow-lg flex justify-between items-center z-10 flex-shrink-0">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-2">Школьное Расписание 2026</h1>
-          <div className="flex items-center text-slate-400 text-xl">
-            <Calendar className="w-6 h-6 mr-2" />
+          <h1 className="text-2xl font-bold tracking-tight text-white mb-1">Школьное Расписание 2026</h1>
+          <div className="flex items-center text-slate-400 text-sm">
+            <Calendar className="w-4 h-4 mr-1" />
             <span className="capitalize">{formatDate(now)}</span>
           </div>
         </div>
         
         <div className="text-right flex flex-col items-end">
-          <div className="flex items-center text-5xl font-mono font-bold text-white mb-2">
-            <Clock className="w-10 h-10 mr-4 text-blue-400" />
+          <div className="flex items-center text-3xl font-mono font-bold text-white mb-1">
+            <Clock className="w-6 h-6 mr-2 text-blue-400" />
             {formatTime(now)}
           </div>
           <div className="flex flex-col items-end">
-            <div className={`text-2xl font-bold ${statusColor}`}>{statusText}</div>
-            {countdown && <div className="text-xl text-slate-300 font-mono mt-1">{countdown}</div>}
+            <div className={`text-lg font-bold ${statusColor}`}>{statusText}</div>
+            {countdown && <div className="text-sm text-slate-300 font-mono mt-0.5">{countdown}</div>}
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="w-full h-full bg-slate-900 border-b border-slate-800 shadow-2xl overflow-hidden">
-          <table className="w-full h-full text-left border-collapse">
+      <main className="flex-1 overflow-hidden flex flex-col">
+        <div className="w-full h-full bg-slate-900 shadow-2xl overflow-hidden flex flex-col">
+          <table className="flex-1 text-left border-collapse text-sm">
             <thead>
-              <tr className="bg-slate-800 text-slate-300 text-xl uppercase tracking-wider">
-                <th className="p-4 font-semibold w-24 text-center border-b border-slate-700">Урок</th>
-                <th className="p-4 font-semibold w-40 text-center border-b border-slate-700">Время</th>
+              <tr className="bg-slate-800 text-slate-300 text-xs uppercase tracking-wider sticky top-0">
+                <th className="p-1 font-semibold text-center border-b border-slate-700 w-16">День</th>
+                <th className="p-1 font-semibold text-center border-b border-slate-700 w-10">Урок</th>
+                <th className="p-1 font-semibold text-center border-b border-slate-700 w-20">Время</th>
                 {classes.map(c => (
-                  <th key={c} className="p-4 font-semibold border-b border-slate-700 border-l border-slate-700/50">{c}</th>
+                  <th key={c} className="p-1 font-semibold border-b border-slate-700 border-l border-slate-700/50 text-center">{c}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {periods.map((period) => {
-                const isPast = parseTime(period.end, now) <= now;
-                const isCurrent = currentPeriod?.id === period.id;
-                const isFuture = parseTime(period.start, now) > now;
-
-                if (period.type === 'break') {
+              {daysOfWeek.map((day, dayIdx) => {
+                const dayLessons = weeklySchedule[dayIdx] || baseLessons;
+                const isCurrentDay = currentDayIndex === dayIdx;
+                
+                return dayLessons.map((lesson, lessonIdx) => {
+                  const isCurrent = isCurrentDay && currentLessonIndex === lessonIdx;
+                  const start = parseTime(lesson.start, now);
+                  const end = parseTime(lesson.end, now);
+                  const isPast = end <= now && isCurrentDay;
+                  
                   return (
                     <tr 
-                      key={period.id} 
+                      key={`${dayIdx}-${lessonIdx}`}
                       className={`
-                        transition-colors duration-500
-                        ${isCurrent ? 'bg-amber-900/40 border-y-2 border-amber-500 shadow-[inset_0_0_20px_rgba(245,158,11,0.2)]' : 'bg-slate-900/50'}
+                        transition-all duration-500 text-sm border-b border-slate-800
+                        ${isCurrent ? 'bg-emerald-900/40 border-l-4 border-l-emerald-500 shadow-[inset_0_0_30px_rgba(16,185,129,0.15)]' : ''}
                         ${isPast ? 'opacity-40' : ''}
+                        ${isCurrentDay && !isCurrent ? 'bg-slate-900/50' : 'bg-slate-900/30'}
                       `}
                     >
-                      <td colSpan={2} className="p-2 text-center text-slate-400 font-medium border-b border-slate-800">
-                        {isCurrent ? (
-                          <span className="text-amber-400 font-bold flex items-center justify-center">
-                            <Clock className="w-4 h-4 mr-2" /> Перемена {period.start} - {period.end}
-                          </span>
-                        ) : (
-                          <span className="text-sm">Перемена {period.start} - {period.end}</span>
-                        )}
-                      </td>
-                      <td colSpan={classes.length} className="p-2 border-b border-slate-800 border-l border-slate-800/50">
-                        {isCurrent && (
-                          <div className="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                            <div 
-                              className="bg-amber-500 h-1.5 transition-all duration-1000 ease-linear" 
-                              style={{ 
-                                width: `${Math.max(0, Math.min(100, ((now.getTime() - parseTime(period.start, now).getTime()) / (parseTime(period.end, now).getTime() - parseTime(period.start, now).getTime())) * 100))}%` 
-                              }}
-                            ></div>
+                      <td className={`p-1 text-center font-bold border-r border-slate-700/50 text-xs ${isCurrentDay && lessonIdx === 0 ? 'text-emerald-400' : 'text-slate-400'}`}>
+                        {lessonIdx === 0 && (
+                          <div>
+                            <div className="font-bold">{dayShorts[dayIdx]}</div>
+                            <div className="text-xs text-slate-500">{day.slice(0, 3)}</div>
                           </div>
                         )}
                       </td>
+                      <td className={`p-1 text-center font-bold text-sm border-r border-slate-700/50 ${isCurrent ? 'text-emerald-400' : 'text-slate-500'}`}>
+                        {lesson.lesson}
+                      </td>
+                      <td className={`p-1 text-center font-mono whitespace-nowrap border-r border-slate-700/50 text-xs ${isCurrent ? 'text-emerald-300 font-bold' : 'text-slate-400'}`}>
+                        {lesson.start} - {lesson.end}
+                      </td>
+                      {lesson.subjects.map((subject, i) => (
+                        <td key={i} className={`p-1 border-l border-slate-700/50 text-xs ${isCurrent ? 'text-white font-medium' : ''}`}>
+                          {subject || <span className="text-slate-700">-</span>}
+                        </td>
+                      ))}
                     </tr>
                   );
-                }
-
-                return (
-                  <tr 
-                    key={period.id}
-                    className={`
-                      transition-all duration-500 text-xl
-                      ${isCurrent ? 'bg-slate-800 border-y-2 border-emerald-500 shadow-[inset_0_0_30px_rgba(16,185,129,0.15)]' : 'border-b border-slate-800'}
-                      ${isPast ? 'opacity-30 grayscale' : ''}
-                      ${isFuture ? 'text-slate-300' : ''}
-                    `}
-                  >
-                    <td className={`p-5 text-center font-bold text-2xl ${isCurrent ? 'text-emerald-400' : 'text-slate-500'}`}>
-                      {period.data?.lesson}
-                    </td>
-                    <td className="p-5 text-center font-mono whitespace-nowrap">
-                      <div className={isCurrent ? 'text-emerald-300 font-bold' : 'text-slate-400'}>
-                        {period.start} - {period.end}
-                      </div>
-                      {isCurrent && (
-                        <div className="mt-2 text-sm text-emerald-400 font-mono bg-emerald-950/50 rounded px-2 py-1 inline-block border border-emerald-800/50">
-                          {countdown}
-                        </div>
-                      )}
-                    </td>
-                    {period.data?.subjects.map((subject, i) => (
-                      <td key={i} className={`p-5 border-l border-slate-700/50 ${isCurrent ? 'text-white font-medium' : ''}`}>
-                        {subject || <span className="text-slate-700">-</span>}
-                      </td>
-                    ))}
-                  </tr>
-                );
+                });
               })}
             </tbody>
           </table>
